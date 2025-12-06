@@ -1,0 +1,4 @@
+# Test run directory - ignore all contents
+*
+!.gitignore
+
