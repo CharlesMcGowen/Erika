@@ -6,7 +6,7 @@ Reverse Image Search Service for Erika
 Uses Google reverse image search to verify profile photos in emails
 and detect phishing/fraud attempts.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

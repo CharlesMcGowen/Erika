@@ -5,7 +5,7 @@ Erika Installation Wizard
 
 First-run setup wizard for configuring EgoLlama Gateway connection.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

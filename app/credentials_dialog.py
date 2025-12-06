@@ -5,7 +5,7 @@ Erika Gmail Credentials Configuration Dialog
 
 Qt dialog for configuring Erika's Gmail OAuth2 credentials.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

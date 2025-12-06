@@ -5,7 +5,7 @@ Desktop Icon Creator for Erika
 
 Creates desktop shortcuts/icons for Windows, Linux, and macOS.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

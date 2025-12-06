@@ -6,7 +6,7 @@ Erika EgoLlama Gateway Integration
 Integration service for connecting Erika to EgoLlama Gateway server.
 Handles email syncing, model training, and AI-powered email analysis.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

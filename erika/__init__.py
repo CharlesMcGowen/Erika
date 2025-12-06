@@ -5,7 +5,7 @@ Erika - Gmail OAuth Integration
 
 Gmail OAuth integration library for email processing.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

@@ -11,7 +11,7 @@ Security Features:
 - Secure base64 decoding with error handling
 - OAuth token management via OAuthTokenManager
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

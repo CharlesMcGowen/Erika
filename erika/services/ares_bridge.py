@@ -12,7 +12,7 @@ Features:
 - Gmail API mitigation (mark as spam/phishing)
 - Automatic label management
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

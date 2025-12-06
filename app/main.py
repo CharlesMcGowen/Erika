@@ -5,7 +5,7 @@ Erika Standalone Application
 
 Main Qt application window for the standalone Erika email assistant.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 
@@ -258,7 +258,7 @@ class ErikaStandaloneApp(QMainWindow):
             "<li>Phishing detection with reverse image search</li>"
             "<li>Seamless server configuration</li>"
             "</ul>"
-            "<p>© 2024 EGO Revolution Team</p>"
+            "<p>© 2024 Living Archive team</p>"
         )
     
     def closeEvent(self, event):

@@ -5,7 +5,7 @@ Image Extractor for Email Analysis
 
 Extracts images from emails for reverse image search analysis.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

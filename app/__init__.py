@@ -5,7 +5,7 @@ Erika Standalone Application
 
 Standalone Qt application for Erika's email management system.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

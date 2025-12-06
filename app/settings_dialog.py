@@ -5,7 +5,7 @@ Erika Settings Dialog
 
 Settings dialog for configuring Erika's server connection and other options.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

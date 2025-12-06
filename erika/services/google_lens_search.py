@@ -5,7 +5,7 @@ Google Lens Reverse Image Search Implementation
 
 Actual implementation of Google reverse image search using Selenium.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

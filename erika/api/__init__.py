@@ -5,7 +5,7 @@ Erika API
 
 API endpoints for Gmail OAuth integration.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

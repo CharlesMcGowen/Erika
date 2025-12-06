@@ -6,7 +6,7 @@ Footprint Analyzer
 Analyzes domain footprint data for threat detection.
 Fetches domain age, source count, and reputation data.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

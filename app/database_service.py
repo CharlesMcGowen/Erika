@@ -5,7 +5,7 @@ Erika Database Service
 
 Standalone database service for Erika using the erika library.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

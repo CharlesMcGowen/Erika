@@ -11,7 +11,7 @@ Features:
 - Revocation detection and handling
 - Per-user token storage
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

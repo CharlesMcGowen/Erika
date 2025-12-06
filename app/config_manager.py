@@ -5,7 +5,7 @@ Configuration Manager for Erika
 
 Manages application configuration including EgoLlama Gateway settings.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

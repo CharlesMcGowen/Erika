@@ -5,7 +5,7 @@ Erika Email Plugin
 
 Gmail OAuth integration plugin for Erika.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

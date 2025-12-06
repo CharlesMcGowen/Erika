@@ -1,6 +1,45 @@
-# EgoLlama Erika - Gmail OAuth Integration
+# EgoLlama Erika - Email Assistant Plugin
 
-A secure Gmail OAuth integration library for email processing with built-in security features.
+Erika is an **AI-powered email assistant plugin** for the EgoLlama Gateway server. It provides secure Gmail OAuth integration, email analysis, and phishing detection.
+
+**Copyright (c) 2024 Living Archive team. All Rights Reserved.**
+
+## 🚀 Quick Start (Plugin Mode)
+
+Erika works as a **plugin** for EgoLlama Gateway. Here's how to get started:
+
+### 1. Install EgoLlama Gateway
+
+First, download and run the [EgoLlama Gateway server](https://github.com/your-org/EgoLlama):
+
+```bash
+git clone https://github.com/your-org/EgoLlama.git
+cd EgoLlama
+pip install -r requirements.txt
+python unified_llama_gateway.py
+```
+
+### 2. Install Erika Plugin
+
+```bash
+git clone https://github.com/your-org/EgoLlama-erika.git
+cd EgoLlama-erika
+pip install -r requirements.txt
+```
+
+### 3. Start Erika Plugin
+
+```bash
+python scripts/start_erika_plugin.py
+```
+
+Erika will automatically connect to EgoLlama Gateway and register as a plugin. You can then access Erika through the EgoLlama agent interface!
+
+**📖 For detailed installation instructions, see [PLUGIN_INSTALLATION.md](PLUGIN_INSTALLATION.md)**
+
+---
+
+## Features
 
 ## Features
 
@@ -253,7 +292,13 @@ OAuth tokens are stored in:
 
 ## License
 
-See LICENSE file for details.
+**Commercial License** - Copyright (c) 2024 Living Archive team. All Rights Reserved.
+
+This software is licensed for personal, non-commercial use only. Commercial use, 
+redistribution, or integration into commercial products requires a commercial license 
+from Living Archive team.
+
+See LICENSE file for full terms and conditions.
 
 ## Contributing
 

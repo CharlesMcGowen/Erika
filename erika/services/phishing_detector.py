@@ -5,7 +5,7 @@ Phishing Detector with Reverse Image Search
 
 Detects phishing emails by analyzing profile photos using reverse image search.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 

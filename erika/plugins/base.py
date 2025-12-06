@@ -5,7 +5,7 @@ Erika Plugin Base Interface
 
 Base class for all Erika plugins implementing the plugin interface.
 
-Author: EGO Revolution Team
+Author: Living Archive team
 Version: 1.0.0
 """
 
