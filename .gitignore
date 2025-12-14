@@ -34,19 +34,29 @@ env/
 *~
 
 # OAuth Tokens (CRITICAL - Never commit tokens!)
+# Tokens are stored in ~/.erika/ (user home directory, outside repo)
 *.pickle
 gmail_token_*.pickle
 gmail_token_*_metadata.json
-~/.erika/
 .erika/
+**/.erika/
+
+# User Configuration (stored in ~/.erika/config.json, outside repo)
+# But ignore any config.json in the repo itself
+config.json
+**/config.json
+!config.json.example
+!*.json.example
 
 # Secrets and Credentials
-*.json
-!package.json
 credentials.json
 client_secret*.json
+client_secret*.json.example
+*.key
+*.pem
 .env
 .env.local
+.env.*.local
 secrets/
 
 # Database
@@ -71,4 +81,7 @@ htmlcov/
 # Distribution
 dist/
 *.tar.gz
+
+# Development Documentation (not for end users)
+Docs/
 
