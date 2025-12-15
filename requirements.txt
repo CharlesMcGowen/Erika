@@ -1,5 +1,6 @@
-# Gmail OAuth Integration Requirements
+# Email Integration Requirements
 # Python 3.7+
+# Supports: Gmail (OAuth2), IMAP (generic email servers)
 
 # Qt GUI Framework
 PyQt6>=6.4.0

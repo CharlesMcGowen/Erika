@@ -94,13 +94,32 @@ class ErikaCLI:
             if not self.config:
                 self.config = self._load_config()
             
-            # Initialize Gmail service if credentials available
-            if self.config.get('gmail_client_id') and self.config.get('gmail_client_secret'):
-                from erika.plugins.email.gmail_service import ErikaGmailService
-                self.gmail_service = ErikaGmailService(
+            # Initialize email service based on provider
+            provider = self.config.get('email_provider', 'gmail').lower()
+            
+            if provider == 'gmail':
+                # Gmail OAuth2
+                if self.config.get('gmail_client_id') and self.config.get('gmail_client_secret'):
+                    from erika.plugins.email.gmail_service import ErikaGmailService
+                    self.gmail_service = ErikaGmailService(
+                        user_id=self.user_id,
+                        config=self.config
+                    )
+            elif provider == 'imap':
+                # IMAP generic email
+                from erika.plugins.email.imap_service import IMAPService
+                self.gmail_service = IMAPService(
                     user_id=self.user_id,
                     config=self.config
                 )
+            else:
+                logger.warning(f"Unknown email provider: {provider}. Using Gmail.")
+                if self.config.get('gmail_client_id') and self.config.get('gmail_client_secret'):
+                    from erika.plugins.email.gmail_service import ErikaGmailService
+                    self.gmail_service = ErikaGmailService(
+                        user_id=self.user_id,
+                        config=self.config
+                    )
             
             # Initialize database service if available
             try:
@@ -291,68 +310,156 @@ class ErikaCLI:
     
     def configure_credentials(
         self,
+        provider: Optional[str] = None,
         client_id: Optional[str] = None,
         client_secret: Optional[str] = None,
+        imap_server: Optional[str] = None,
+        imap_username: Optional[str] = None,
+        imap_password: Optional[str] = None,
         enable: Optional[bool] = None,
         test: bool = False
     ) -> bool:
-        """Configure Gmail credentials (matches Credentials Dialog)"""
+        """Configure email provider credentials"""
         if not self.db_service:
             logger.error("Database service not available")
             return False
         
-        # Interactive mode if credentials not provided
-        if not client_id or not client_secret:
-            print("\n🌿 Gmail OAuth2 Configuration")
-            print("\nTo get credentials:")
-            print("1. Go to https://console.cloud.google.com")
-            print("2. Create a project or select existing one")
-            print("3. Enable Gmail API in APIs & Services > Library")
-            print("4. Create OAuth2 credentials in APIs & Services > Credentials")
-            print("5. Application type: Desktop app")
-            print("6. Copy the Client ID and Client Secret\n")
+        # Determine provider
+        if not provider:
+            print("\n🌿 Email Provider Configuration")
+            print("\nSelect email provider:")
+            print("1. Gmail (OAuth2)")
+            print("2. IMAP (Yahoo, iCloud, custom servers)")
+            choice = input("Provider (1 or 2, default: 1): ").strip() or "1"
+            provider = "gmail" if choice == "1" else "imap"
+        
+        provider = provider.lower()
+        
+        if provider == 'gmail':
+            # Gmail OAuth2 configuration
+            if not client_id or not client_secret:
+                print("\n🌿 Gmail OAuth2 Configuration")
+                print("\nTo get credentials:")
+                print("1. Go to https://console.cloud.google.com")
+                print("2. Create a project or select existing one")
+                print("3. Enable Gmail API in APIs & Services > Library")
+                print("4. Create OAuth2 credentials in APIs & Services > Credentials")
+                print("5. Application type: Desktop app")
+                print("6. Copy the Client ID and Client Secret\n")
+                
+                if not client_id:
+                    client_id = input("Client ID: ").strip()
+                if not client_secret:
+                    client_secret = input("Client Secret: ").strip()
             
-            if not client_id:
-                client_id = input("Client ID: ").strip()
-            if not client_secret:
-                client_secret = input("Client Secret: ").strip()
-        
-        if not client_id or not client_secret:
-            logger.error("Client ID and Client Secret are required")
-            return False
-        
-        # Validate format
-        if not client_id.endswith('.apps.googleusercontent.com'):
-            logger.error("Client ID should end with '.apps.googleusercontent.com'")
-            return False
-        
-        # Test credentials if requested
-        if test:
-            logger.info("🧪 Testing credentials...")
-            if not self._test_credentials(client_id, client_secret):
-                logger.error("❌ Credential test failed")
+            if not client_id or not client_secret:
+                logger.error("Client ID and Client Secret are required")
                 return False
-            logger.info("✅ Credentials are valid!")
+            
+            # Validate format
+            if not client_id.endswith('.apps.googleusercontent.com'):
+                logger.error("Client ID should end with '.apps.googleusercontent.com'")
+                return False
+            
+            # Test credentials if requested
+            if test:
+                logger.info("🧪 Testing Gmail credentials...")
+                if not self._test_credentials(client_id, client_secret):
+                    logger.error("❌ Credential test failed")
+                    return False
+                logger.info("✅ Credentials are valid!")
+            
+            # Save to database
+            try:
+                update_data = {
+                    'email_provider': 'gmail',
+                    'gmail_client_id': client_id,
+                    'gmail_client_secret': client_secret
+                }
+                if enable is not None:
+                    update_data['gmail_enabled'] = enable
+                
+                self.db_service.update_email_config(user_id="default", **update_data)
+                logger.info("✅ Gmail credentials saved")
+                
+                # Update local config
+                self.config['email_provider'] = 'gmail'
+                self.config['gmail_client_id'] = client_id
+                self.config['gmail_client_secret'] = client_secret
+                
+                return True
+            except Exception as e:
+                logger.error(f"Failed to save credentials: {e}")
+                return False
         
-        # Save to database
-        try:
-            update_data = {
-                'gmail_client_id': client_id,
-                'gmail_client_secret': client_secret
-            }
-            if enable is not None:
-                update_data['gmail_enabled'] = enable
+        elif provider == 'imap':
+            # IMAP configuration
+            if not imap_server or not imap_username or not imap_password:
+                print("\n🌿 IMAP Email Configuration")
+                print("\nEnter IMAP server details:")
+                print("Examples:")
+                print("  Yahoo: imap.mail.yahoo.com")
+                print("  iCloud: imap.mail.me.com")
+                print("  Custom: mail.example.com\n")
+                
+                if not imap_server:
+                    imap_server = input("IMAP Server: ").strip()
+                if not imap_username:
+                    imap_username = input("Email/Username: ").strip()
+                if not imap_password:
+                    import getpass
+                    imap_password = getpass.getpass("Password/App Password: ").strip()
             
-            self.db_service.update_email_config(user_id="default", **update_data)
-            logger.info("✅ Credentials saved")
+            if not imap_server or not imap_username or not imap_password:
+                logger.error("IMAP server, username, and password are required")
+                return False
             
-            # Update local config
-            self.config['gmail_client_id'] = client_id
-            self.config['gmail_client_secret'] = client_secret
+            # Test connection if requested
+            if test:
+                logger.info("🧪 Testing IMAP connection...")
+                try:
+                    from erika.plugins.email.imap_service import IMAPService
+                    test_service = IMAPService(config={
+                        'imap_server': imap_server,
+                        'imap_username': imap_username,
+                        'imap_password': imap_password
+                    })
+                    if test_service.authenticate():
+                        logger.info("✅ IMAP connection successful!")
+                    else:
+                        logger.error("❌ IMAP connection failed")
+                        return False
+                except Exception as e:
+                    logger.error(f"❌ IMAP test failed: {e}")
+                    return False
             
-            return True
-        except Exception as e:
-            logger.error(f"Failed to save credentials: {e}")
+            # Save to database
+            try:
+                update_data = {
+                    'email_provider': 'imap',
+                    'imap_server': imap_server,
+                    'imap_username': imap_username,
+                    'imap_password': imap_password
+                }
+                if enable is not None:
+                    update_data['gmail_enabled'] = enable  # Reuse gmail_enabled flag
+                
+                self.db_service.update_email_config(user_id="default", **update_data)
+                logger.info("✅ IMAP credentials saved")
+                
+                # Update local config
+                self.config['email_provider'] = 'imap'
+                self.config['imap_server'] = imap_server
+                self.config['imap_username'] = imap_username
+                self.config['imap_password'] = imap_password
+                
+                return True
+            except Exception as e:
+                logger.error(f"Failed to save IMAP credentials: {e}")
+                return False
+        
+        else:
+            logger.error(f"Unknown email provider: {provider}")
             return False
     
     def authenticate(self, refresh: bool = False) -> bool:
@@ -733,12 +840,16 @@ def main():
     sort_parser = subparsers.add_parser('sort', help='Sort emails into categories')
     sort_parser.add_argument('--output', choices=['human', 'json'], default='human', help='Output format')
     
-    # Config command (Gmail credentials)
-    config_parser = subparsers.add_parser('config', help='Configure Gmail OAuth2 credentials')
+    # Config command (Email provider credentials)
+    config_parser = subparsers.add_parser('config', help='Configure email provider credentials')
+    config_parser.add_argument('--provider', choices=['gmail', 'imap'], help='Email provider (gmail or imap)')
     config_parser.add_argument('--client-id', help='Gmail OAuth client ID')
     config_parser.add_argument('--client-secret', help='Gmail OAuth client secret')
-    config_parser.add_argument('--enable', action='store_true', help='Enable Gmail integration')
-    config_parser.add_argument('--disable', action='store_true', help='Disable Gmail integration')
+    config_parser.add_argument('--imap-server', help='IMAP server address (e.g., imap.mail.yahoo.com)')
+    config_parser.add_argument('--imap-username', help='IMAP username/email')
+    config_parser.add_argument('--imap-password', help='IMAP password/app password')
+    config_parser.add_argument('--enable', action='store_true', help='Enable email integration')
+    config_parser.add_argument('--disable', action='store_true', help='Disable email integration')
     config_parser.add_argument('--test', action='store_true', help='Test credentials before saving')
     
     # Settings command
@@ -794,8 +905,12 @@ def main():
             elif args.disable:
                 enable = False
             success = cli.configure_credentials(
+                provider=args.provider,
                 client_id=args.client_id,
                 client_secret=args.client_secret,
+                imap_server=args.imap_server,
+                imap_username=args.imap_username,
+                imap_password=args.imap_password,
                 enable=enable,
                 test=args.test
             )

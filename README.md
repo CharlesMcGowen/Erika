@@ -53,19 +53,28 @@ python erika_cli.py setup
 python erika_cli.py setup --gateway-url http://localhost:8082 --test
 ```
 
-#### `config` - Configure Gmail OAuth2 credentials
-Set up Gmail API credentials (matches Credentials Dialog).
+#### `config` - Configure email provider credentials
+Set up email provider credentials (Gmail OAuth2 or IMAP).
 
+**Gmail (OAuth2):**
 ```bash
 # Interactive mode
-python erika_cli.py config
+python erika_cli.py config --provider gmail
 
 # Non-interactive mode
-python erika_cli.py config --client-id YOUR_ID --client-secret YOUR_SECRET --test
+python erika_cli.py config --provider gmail --client-id YOUR_ID --client-secret YOUR_SECRET --test
 
-# Enable/disable Gmail integration
-python erika_cli.py config --enable
-python erika_cli.py config --disable
+# Enable/disable
+python erika_cli.py config --provider gmail --enable
+```
+
+**IMAP (Yahoo, iCloud, custom servers):**
+```bash
+# Interactive mode
+python erika_cli.py config --provider imap
+
+# Non-interactive mode
+python erika_cli.py config --provider imap --imap-server imap.mail.yahoo.com --imap-username user@yahoo.com --imap-password PASSWORD --test
 ```
 
 #### `settings` - Configure Erika settings
@@ -159,11 +168,19 @@ python erika_cli.py sort --output json
 
 ## 🔧 Configuration
 
+### Email Providers
+
+Erika CLI supports multiple email providers:
+- **Gmail** (OAuth2) - Full features, recommended
+- **IMAP** (Yahoo, iCloud, custom servers) - Read-only, Alpha
+
+See [EMAIL_PROVIDERS.md](EMAIL_PROVIDERS.md) for detailed provider information.
+
 ### Configuration Files
 
 Erika CLI stores configuration in:
 - `~/.erika/config.json` - Gateway URL, database URL
-- Database (via `app/database_service.py`) - Gmail credentials, security settings
+- Database (via `app/database_service.py`) - Email provider credentials, security settings
 
 ### Environment Variables
 
